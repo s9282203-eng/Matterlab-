@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MatterLab MEA-02 | Engine Experiment</title>
+<style>
+:root{color-scheme:light;--bg:#f3f6fb;--panel:#fff;--panel2:#e9f0f8;--line:#cbd7e5;--txt:#0e1a2c;--muted:#4a5b72;--cyan:#0a7387;--bar1:#2aa3bb;--bar2:#3fbf92;--btn:#d6edf3;--btnline:#5fb0c2;--inp:#fff;--noteb:#fff4d6;--notel:#e0c36e;--notet:#6b4e00;--okb:#dcf5ea;--okl:#6cc3a0;--okt:#0d5238;--errb:#fde4e6;--errl:#e59aa2;--errt:#7d1d27;--warnb:#fff4d6;--warnl:#e0c36e;--warnt:#6b4e00;--danger:#a32a38;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0b1220;--panel:#121d30;--panel2:#19283e;--line:#2a3c55;--txt:#edf4ff;--muted:#a9bad0;--cyan:#5bd0e5;--bar1:#43b9d1;--bar2:#6bdbab;--btn:#16485b;--btnline:#398ca0;--inp:#0a1525;--noteb:#302919;--notel:#66532b;--notet:#f7d99d;--okb:#14352f;--okl:#286454;--okt:#b3f2d9;--errb:#3a2029;--errl:#79404a;--errt:#ffc0c4;--warnb:#302919;--warnl:#66532b;--warnt:#f7d99d;--danger:#ffb2b5}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--panel2:#19283e;--line:#2a3c55;--txt:#edf4ff;--muted:#a9bad0;--cyan:#5bd0e5;--bar1:#43b9d1;--bar2:#6bdbab;--btn:#16485b;--btnline:#398ca0;--inp:#0a1525;--noteb:#302919;--notel:#66532b;--notet:#f7d99d;--okb:#14352f;--okl:#286454;--okt:#b3f2d9;--errb:#3a2029;--errl:#79404a;--errt:#ffc0c4;--warnb:#302919;--warnl:#66532b;--warnt:#f7d99d;--danger:#ffb2b5}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{padding:20px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel)}
+h1{font-size:21px;margin:0}h2{font-size:17px;margin:0 0 10px}h3{font-size:14px;margin:14px 0 6px}
+.sub,.muted,.help{color:var(--muted)}.sub{margin:3px 0 0;font-size:13px}.muted{font-size:13px}.help{font-size:11px;margin-top:4px}
+.tag{border:1px solid var(--btnline);color:var(--cyan);padding:5px 10px;border-radius:30px;font-size:12px}
+nav{display:flex;gap:8px;padding:12px clamp(16px,4vw,44px);overflow-x:auto;border-bottom:1px solid var(--line)}
+button{font:inherit;cursor:pointer;color:var(--txt)}
+nav button,.btn{border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:9px 13px;white-space:nowrap;font-weight:600}
+nav button.active,.btn.primary{background:var(--btn);border-color:var(--btnline)}
+.btn.secondary{background:var(--panel2)}.btn.danger{border-color:var(--errl);color:var(--danger)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+main{max-width:1400px;margin:auto;padding:20px clamp(16px,4vw,44px)}
+.tab{display:none}.tab.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.s12{grid-column:span 12}.s8{grid-column:span 8}.s7{grid-column:span 7}.s6{grid-column:span 6}.s5{grid-column:span 5}.s4{grid-column:span 4}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{background:var(--panel2);padding:13px;border-radius:10px}.metric strong{display:block;font-size:23px;line-height:1.3}.metric span{font-size:12px;color:var(--muted)}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 13px}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+input,select{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:var(--inp);color:var(--txt);font:inherit}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.resultgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.result{background:var(--panel2);border-radius:10px;padding:12px}.result b{display:block;font-size:22px}.result small{color:var(--muted)}
+.message{padding:10px 12px;border-radius:9px;margin-top:12px;font-size:13px;display:none}
+.message.error{display:block;background:var(--errb);border:1px solid var(--errl);color:var(--errt)}
+.message.ok{display:block;background:var(--okb);border:1px solid var(--okl);color:var(--okt)}
+.message.warn{display:block;background:var(--warnb);border:1px solid var(--warnl);color:var(--warnt)}
+.note{padding:11px 13px;background:var(--noteb);border:1px solid var(--notel);color:var(--notet);border-radius:10px;font-size:12px;margin-top:12px}
+.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--muted)}
+.bar{height:10px;background:var(--panel2);border-radius:20px;overflow:hidden;min-width:70px}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--bar1),var(--bar2))}
+footer{padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+ul,ol{padding-left:19px}
+@media(max-width:850px){.s8,.s7,.s6,.s5,.s4{grid-column:span 12}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.formgrid,.resultgrid{grid-template-columns:1fr}h1{font-size:18px}}
+</style>
+</head>
+<body>
+<header>
+ <div><h1>MatterLab <span style="color:var(--cyan)">MEA-02</span></h1><p class="sub">Multi-fuel automotive engine · measurement and comparison prototype</p></div>
+ <span class="tag">REBUILT · v2.0</span>
+</header>
+<nav aria-label="Main navigation">
+ <button class="active" data-tab="overview">Overview</button>
+ <button data-tab="entry">Test entry &amp; calculator</button>
+ <button data-tab="compare">Fuel comparison</button>
+ <button data-tab="method">Method &amp; safety</button>
+</nav>
+<main>
+<section id="overview" class="tab active"><div class="grid">
+ <div class="card s12"><div class="metrics">
+  <div class="metric"><strong id="mRuns">0</strong><span>Saved test points</span></div>
+  <div class="metric"><strong id="mFuels">0 / 5</strong><span>Fuel categories represented</span></div>
+  <div class="metric"><strong id="mBest">—</strong><span>Best measured brake thermal efficiency</span></div>
+  <div class="metric"><strong id="mAvg">—</strong><span>Average brake thermal efficiency</span></div>
+ </div></div>
+ <div class="card s8"><h2>Project objective</h2>
+  <p class="muted">Use the same approved engine platform and controlled operating points to compare fuel energy input with measured brake output. Enter measured values in the calculator; results update immediately.</p>
+  <p class="muted">This is an offline data-entry and calculation tool. It does not connect to sensors or control engine hardware.</p></div>
+ <div class="card s4"><h2>Fuel categories</h2><ul class="muted"><li>Petrol — baseline</li><li>LPG / CNG — only with certified conversion</li><li>Hydrogen — specialist-approved system only</li><li>Diesel — separate compression-ignition reference engine, not a direct fuel swap</li></ul></div>
+ <div class="card s12"><h2>Quick start</h2>
+  <ol class="muted"><li>Open <b>Test entry &amp; calculator</b>.</li><li>Enter RPM, torque, fuel mass flow and fuel lower heating value (LHV).</li><li>Brake power, fuel power and brake thermal efficiency appear as soon as the inputs are valid.</li><li>Save the test point to add it to the comparison and export.</li></ol>
+  <div class="note">Carnot efficiency is an ideal temperature-limit benchmark, not the measured efficiency of a real engine. Use hot- and cold-reservoir temperatures that are physically justified.</div></div>
+</div></section>
+
+<section id="entry" class="tab"><div class="grid">
+ <div class="card s7"><h2>Measured test inputs</h2>
+  <p class="muted">Enter steady-state measurements. Blank fields are never silently treated as zero.</p>
+  <div class="formgrid">
+   <div><label for="fuel">Fuel / configuration</label><select id="fuel"><option value="Petrol">Petrol (baseline)</option><option value="LPG">LPG</option><option value="CNG">CNG</option><option value="Hydrogen">Hydrogen</option><option value="Diesel reference">Diesel reference engine</option></select></div>
+   <div><label for="runid">Test ID (blank = auto)</label><input id="runid" placeholder="e.g. PET-1500-01"></div>
+   <div><label for="rpm">Engine speed (RPM)</label><input id="rpm" type="number" min="1" step="1" placeholder="e.g. 1500"></div>
+   <div><label for="torque">Brake torque (N·m)</label><input id="torque" type="number" min="0" step="any" placeholder="e.g. 85"></div>
+   <div><label for="flow">Fuel mass flow (kg/h)</label><input id="flow" type="number" min="0.000001" step="any" placeholder="e.g. 3.6"></div>
+   <div><label for="lhv">Fuel LHV (MJ/kg)</label><input id="lhv" type="number" min="0.000001" step="any" placeholder="Measured / sourced value"></div>
+   <div><label for="hot">Hot reservoir (°C) — optional</label><input id="hot" type="number" step="any" placeholder="Only if justified"></div>
+   <div><label for="cold">Cold reservoir (°C) — optional</label><input id="cold" type="number" step="any" placeholder="Only if justified"></div>
+   <div><label for="exhaust">Exhaust temperature (°C) — optional</label><input id="exhaust" type="number" step="any" placeholder="Measured exhaust gas"></div>
+   <div><label for="notes">Notes — optional</label><input id="notes" placeholder="Load, ambient conditions, etc."></div>
+  </div>
+  <div class="actions"><button class="btn primary" id="saveBtn">Calculate &amp; save test</button><button class="btn secondary" id="sampleBtn">Load sample values</button><button class="btn secondary" id="clearBtn">Clear inputs</button></div>
+  <div id="entryMsg" class="message" role="status" aria-live="polite"></div>
+ </div>
+ <div class="card s5"><h2>Live calculated results</h2>
+  <div class="resultgrid">
+   <div class="result"><small>Brake power</small><b id="rPower">—</b><small>kW</small></div>
+   <div class="result"><small>Fuel energy rate</small><b id="rFuelPower">—</b><small>kW</small></div>
+   <div class="result"><small>Brake thermal efficiency</small><b id="rEta">—</b><small>%</small></div>
+   <div class="result"><small>Carnot benchmark</small><b id="rCarnot">—</b><small>% · optional</small></div>
+  </div>
+  <div class="note">Equations used:<br><b>P<sub>b</sub> = 2πNT / 60,000</b> (kW)<br><b>P<sub>fuel</sub> = ṁ × LHV / 3.6</b> (kW, ṁ in kg/h)<br><b>η<sub>bth</sub> = P<sub>b</sub> / P<sub>fuel</sub> × 100</b><br><b>η<sub>Carnot</sub> = 1 − T<sub>c</sub>/T<sub>h</sub></b> (kelvin)</div>
+  <p class="help">Carnot is shown only when both temperatures are supplied and valid. Exhaust and coolant readings are never assumed to be reservoir temperatures.</p>
+ </div>
+</div></section>
+
+<section id="compare" class="tab"><div class="grid">
+ <div class="card s12"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h2>Saved test points</h2><p class="muted">Each row is one operating point. Compare like-for-like RPM and load wherever possible. Data is kept in this browser when storage is available.</p></div>
+  <div class="actions" style="margin:0"><button class="btn secondary" id="csvBtn">Export CSV</button><button class="btn danger" id="deleteAllBtn">Delete all</button></div></div>
+  <div id="cmpMsg" class="message" role="status" aria-live="polite"></div>
+  <div class="tablewrap"><table><thead><tr><th>Test ID</th><th>Fuel</th><th>RPM</th><th>Torque</th><th>Brake kW</th><th>Fuel kW</th><th>ηbth %</th><th>Carnot %</th><th>Exhaust °C</th><th>Notes</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></div>
+ <div class="card s12"><h2>Brake thermal efficiency by fuel</h2><p class="muted">Mean with sample standard deviation (needs 2 or more points) and range.</p>
+  <div class="tablewrap"><table><thead><tr><th>Fuel</th><th>n</th><th>Mean %</th><th>SD</th><th>Min</th><th>Max</th><th style="width:40%">Mean</th></tr></thead><tbody id="stats"></tbody></table></div></div>
+</div></section>
+
+<section id="method" class="tab"><div class="grid">
+ <div class="card s6"><h2>Minimum measurement set</h2><ul class="muted"><li>Engine speed and brake torque</li><li>Fuel mass flow and fuel LHV</li><li>Repeat measurements after stable operating conditions</li><li>Record ambient conditions, intake air, coolant and exhaust temperatures</li><li>Record emissions where suitable equipment is available</li></ul></div>
+ <div class="card s6"><h2>Experimental controls</h2><ul class="muted"><li>Compare fuels at matched RPM and brake load.</li><li>Use consistent warm-up and stabilization criteria.</li><li>Repeat each operating point and report mean and variation.</li><li>Use the correct LHV and mass-flow basis for each fuel.</li><li>Do not compare a diesel reference engine as if it were the same engine.</li></ul></div>
+ <div class="card s12"><h2>Safety and compatibility</h2><p class="muted">Fuel-system conversion, calibration and engine operation must be performed by qualified personnel using certified components, ventilation, leak detection, fire protection and applicable local regulations. Hydrogen, LPG and CNG require dedicated storage, regulators, injectors, shutoff systems and safety procedures. Diesel operation requires a compression-ignition engine; it is not a direct substitute in a normal petrol engine.</p>
+  <div class="note">This prototype is an educational calculation aid only. It is not a design approval, operating procedure, safety certification or substitute for calibrated instruments.</div></div>
+</div></section>
+</main>
+<footer>MatterLab MEA-02 v2.0 · Offline prototype · Data is saved in this browser when storage is available; export CSV regularly to keep a copy.</footer>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id), KEY="matterlab_mea02_v2";
+const FUELS=["Petrol","LPG","CNG","Hydrogen","Diesel reference"], TABS=["overview","entry","compare","method"];
+let records=[], seq=0, warnedSig="", delArmed=null;
+const num=id=>{const r=$(id).value.trim();return r===""?null:Number(r)};
+const fmt=(v,d=3)=>Number.isFinite(v)?v.toFixed(d):"—";
+function msg(el,text,type){el.textContent=text;el.className="message "+type}
+const entryMsg=(t,k)=>msg($("entryMsg"),t,k), cmpMsg=(t,k)=>msg($("cmpMsg"),t,k);
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&Array.isArray(d.records)){records=d.records;seq=Number(d.seq)||records.length}}catch(e){}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({records,seq}))}catch(e){}}
+function calculate(){
+ const rpm=num("rpm"),torque=num("torque"),flow=num("flow"),lhv=num("lhv");
+ const ok=[rpm,torque,flow,lhv].every(v=>v!==null&&Number.isFinite(v))&&rpm>0&&torque>=0&&flow>0&&lhv>0;
+ if(!ok){["rPower","rFuelPower","rEta","rCarnot"].forEach(i=>$(i).textContent="—");return null}
+ const brakePower=2*Math.PI*rpm*torque/60000, fuelPower=flow*lhv/3.6, eta=brakePower/fuelPower*100;
+ let carnot=null;const hot=num("hot"),cold=num("cold");
+ if(hot!==null&&cold!==null&&Number.isFinite(hot)&&Number.isFinite(cold)){const Th=hot+273.15,Tc=cold+273.15;if(Th>0&&Tc>=0&&Tc<Th)carnot=(1-Tc/Th)*100}
+ $("rPower").textContent=fmt(brakePower,3);$("rFuelPower").textContent=fmt(fuelPower,3);$("rEta").textContent=fmt(eta,2);$("rCarnot").textContent=carnot===null?"—":fmt(carnot,2);
+ return {rpm,torque,flow,lhv,brakePower,fuelPower,eta,carnot};
+}
+function clearInputs(){["runid","rpm","torque","flow","lhv","hot","cold","exhaust","notes"].forEach(i=>$(i).value="");$("fuel").value="Petrol";warnedSig="";calculate();$("entryMsg").className="message"}
+function autoId(){let n=seq+1,id;do{id="RUN-"+String(n++).padStart(3,"0")}while(records.some(r=>r.id.toLowerCase()===id.toLowerCase()));return id}
+function save(){
+ const c=calculate();
+ if(!c){entryMsg("Cannot calculate yet. Enter positive RPM, fuel flow and LHV, plus zero or positive torque.","error");return}
+ if(!Number.isFinite(c.eta)||c.eta<=0){entryMsg("Calculated efficiency is not usable. Check torque, fuel flow and LHV units.","error");return}
+ if(c.eta>100){entryMsg("Calculated efficiency exceeds 100%. Check units and measurements before saving.","error");return}
+ let id=$("runid").value.trim();
+ if(id&&records.some(r=>r.id.toLowerCase()===id.toLowerCase())){entryMsg("Test ID “"+id+"” already exists. Use a unique ID or leave it blank for an automatic one.","error");return}
+ const sig=[c.rpm,c.torque,c.flow,c.lhv,$("fuel").value].join("|");
+ if(c.eta>60&&warnedSig!==sig){warnedSig=sig;entryMsg("Efficiency of "+fmt(c.eta,1)+"% is unusually high for a real engine (typically about 25–45%). Re-check units, then press Save again to confirm.","warn");return}
+ if(!id)id=autoId();
+ seq++;
+ records.push({id,fuel:$("fuel").value,rpm:c.rpm,torque:c.torque,flow:c.flow,lhv:c.lhv,brakePower:c.brakePower,fuelPower:c.fuelPower,eta:c.eta,carnot:c.carnot,exhaust:num("exhaust"),notes:$("notes").value.trim()});
+ warnedSig="";persist();render();entryMsg("Test point “"+id+"” saved and added to the comparison.","ok");
+}
+function stats(arr){const n=arr.length,m=arr.reduce((a,b)=>a+b,0)/n;const sd=n>1?Math.sqrt(arr.reduce((s,v)=>s+(v-m)*(v-m),0)/(n-1)):null;return{n,m,sd,min:Math.min(...arr),max:Math.max(...arr)}}
+function cell(tr,v){const td=document.createElement("td");td.textContent=v;tr.appendChild(td);return td}
+function render(){
+ $("mRuns").textContent=records.length;
+ $("mFuels").textContent=new Set(records.map(r=>r.fuel)).size+" / 5";
+ const etas=records.map(r=>r.eta);
+ $("mBest").textContent=etas.length?fmt(Math.max(...etas),2)+"%":"—";
+ $("mAvg").textContent=etas.length?fmt(stats(etas).m,2)+"%":"—";
+ const tb=$("rows");tb.innerHTML="";
+ if(!records.length){const tr=document.createElement("tr");const td=cell(tr,"No saved test points yet.");td.colSpan=11;td.className="muted";tb.appendChild(tr)}
+ records.forEach((r,i)=>{
+  const tr=document.createElement("tr");
+  [r.id,r.fuel,fmt(r.rpm,0),fmt(r.torque,2),fmt(r.brakePower,3),fmt(r.fuelPower,3),fmt(r.eta,2),r.carnot===null?"—":fmt(r.carnot,2),r.exhaust===null||r.exhaust===undefined?"—":fmt(r.exhaust,0),r.notes||"—"].forEach(v=>cell(tr,v));
+  const td=document.createElement("td"),b=document.createElement("button");b.className="btn danger";b.textContent="Remove";
+  b.addEventListener("click",()=>{records.splice(i,1);persist();render()});td.appendChild(b);tr.appendChild(td);tb.appendChild(tr);
+ });
+ const st=$("stats");st.innerHTML="";let any=false;
+ FUELS.forEach(f=>{
+  const g=records.filter(r=>r.fuel===f).map(r=>r.eta);if(!g.length)return;any=true;
+  const s=stats(g),tr=document.createElement("tr");
+  [f,s.n,fmt(s.m,2),s.sd===null?"—":fmt(s.sd,2),fmt(s.min,2),fmt(s.max,2)].forEach(v=>cell(tr,v));
+  const td=document.createElement("td"),bar=document.createElement("div"),fill=document.createElement("i");
+  bar.className="bar";fill.style.width=Math.max(0,Math.min(100,s.m))+"%";bar.appendChild(fill);td.appendChild(bar);tr.appendChild(td);st.appendChild(tr);
+ });
+ if(!any){const tr=document.createElement("tr");const td=cell(tr,"Save test points to see fuel comparisons.");td.colSpan=7;td.className="muted";st.appendChild(tr)}
+}
+function csv(){
+ if(!records.length){cmpMsg("There are no saved test points to export.","warn");return}
+ const H=["Test ID","Fuel","RPM","Torque_Nm","Fuel_flow_kg_per_h","LHV_MJ_per_kg","Brake_power_kW","Fuel_power_kW","Brake_thermal_efficiency_percent","Carnot_benchmark_percent","Exhaust_C","Notes"];
+ const esc=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+ const L=[H.map(esc).join(",")];
+ records.forEach(r=>L.push([r.id,r.fuel,r.rpm,r.torque,r.flow,r.lhv,r.brakePower,r.fuelPower,r.eta,r.carnot,r.exhaust,r.notes].map(esc).join(",")));
+ const url=URL.createObjectURL(new Blob(["\ufeff"+L.join("\r\n")],{type:"text/csv;charset=utf-8"}));
+ const a=document.createElement("a");a.href=url;a.download="matterlab_MEA02_test_data.csv";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ cmpMsg("CSV export started. If nothing downloads in this view, open the page in its own tab and try again.","ok");
+}
+function show(tab){
+ if(TABS.indexOf(tab)<0)tab="overview";
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+ document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.id===tab));
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.tab);try{location.hash=b.dataset.tab}catch(e){}}));
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
+["rpm","torque","flow","lhv","hot","cold"].forEach(i=>$(i).addEventListener("input",calculate));
+$("saveBtn").addEventListener("click",save);$("clearBtn").addEventListener("click",clearInputs);$("csvBtn").addEventListener("click",csv);
+$("sampleBtn").addEventListener("click",()=>{
+ const v={fuel:"Petrol",runid:"",rpm:1500,torque:85,flow:3.6,lhv:43,hot:450,cold:30,exhaust:420,notes:"Illustrative values only — replace with measured data."};
+ Object.keys(v).forEach(k=>$(k).value=v[k]);warnedSig="";calculate();
+ entryMsg("Illustrative sample loaded (about 31% efficiency). These are not experimental measurements.","ok");
+});
+$("deleteAllBtn").addEventListener("click",function(){
+ if(!records.length){cmpMsg("Nothing to delete.","warn");return}
+ if(!delArmed){this.textContent="Tap again to confirm";delArmed=setTimeout(()=>{delArmed=null;this.textContent="Delete all"},3500);return}
+ clearTimeout(delArmed);delArmed=null;this.textContent="Delete all";records=[];seq=0;persist();render();cmpMsg("All saved test points deleted.","ok");
+});
+load();render();calculate();show(location.hash.slice(1));
+})();
+</script>
+</body>
+</html>
