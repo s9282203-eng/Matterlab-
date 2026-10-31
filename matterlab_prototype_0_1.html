@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MatterLab — Digital Physics Laboratory</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#17223a;--line:#263653;--text:#edf3ff;--muted:#9eacc7;--cyan:#53d6e8;--green:#77e0ae;--amber:#ffc46b;--pink:#e99bff;--danger:#ff8f9b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#17294a 0,#0b1020 42%);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+header{padding:28px clamp(18px,4vw,56px) 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#53d6e8,#7a8cff);display:grid;place-items:center;color:#081321;font-size:25px;font-weight:900}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800}h1{font-size:26px;line-height:1.1;margin:3px 0}header p{margin:5px 0 0;color:var(--muted);font-size:13px}
+.status{border:1px solid #315b60;background:#12303a;color:#9af0d2;padding:7px 11px;border-radius:999px;font-size:12px}
+nav{display:flex;gap:8px;padding:16px clamp(18px,4vw,56px);overflow:auto;border-bottom:1px solid var(--line)}
+nav button,.btn{border:1px solid var(--line);background:#121a2e;color:var(--muted);border-radius:10px;padding:9px 13px;cursor:pointer;font:inherit;font-size:13px;white-space:nowrap}
+nav button.active,.btn.primary{background:#183a4b;border-color:#327c8c;color:#c5f7ff}
+main{padding:26px clamp(18px,4vw,56px) 60px;max-width:1500px;margin:auto}
+.hero{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:18px}
+.card{background:linear-gradient(145deg,rgba(21,32,55,.97),rgba(15,24,42,.97));border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:0 12px 35px #0002}
+.hero h2{font-size:24px;margin:5px 0 8px}.hero p{color:var(--muted);max-width:750px;margin:0}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{background:#0d1629;border:1px solid var(--line);border-radius:12px;padding:13px}.metric strong{display:block;font-size:22px;color:var(--cyan)}.metric span{font-size:11px;color:var(--muted)}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 12px}.section-title h2{font-size:18px;margin:0}.section-title small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.full{grid-column:1/-1}
+h3{font-size:15px;margin:0 0 13px}.muted{color:var(--muted)}.field{margin:13px 0}.field label{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-bottom:6px}.field output{color:var(--text);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--cyan)}input[type=number],select{width:100%;background:#0b1426;border:1px solid var(--line);color:var(--text);padding:10px;border-radius:9px;font:inherit}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.result{background:#0b1728;border:1px solid #29485a;border-radius:12px;padding:14px;margin-top:13px}.result .big{font-size:25px;font-weight:800;color:var(--green)}.result small{color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}td:last-child,th:last-child{text-align:right}
+.bar{height:9px;background:#26344d;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:20px}
+canvas{width:100%;height:220px;background:#0b1426;border:1px solid var(--line);border-radius:12px}
+.note{font-size:12px;color:var(--muted);padding:10px 12px;background:#111e33;border-radius:10px;margin-top:12px}
+.hidden{display:none!important}.pill{display:inline-block;font-size:10px;padding:3px 7px;border-radius:99px;background:#183a4b;color:#9beeff;margin-left:5px}
+footer{padding:20px clamp(18px,4vw,56px);border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+@media(max-width:760px){.hero,.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,1fr)}.hero h2{font-size:21px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">M</div><div><div class="eyebrow">Digital Physics Laboratory</div><h1>MatterLab <span class="pill">Prototype 0.1</span></h1><p>Measure matter. Model energy. Find losses. Explore recovery.</p></div></div>
+ <div class="status">● LOCAL LAB · NO ACCOUNT REQUIRED</div>
+</header>
+<nav>
+ <button class="active" data-tab="overview">Overview</button><button data-tab="thermal">Thermal Lab</button><button data-tab="materials">Matter Database</button><button data-tab="recovery">Energy Recovery</button><button data-tab="method">Research Method</button>
+</nav>
+<main>
+<section id="overview">
+ <div class="hero">
+  <div class="card"><div class="eyebrow">Research workspace / MEA-01</div><h2>A digital bench for physical experiments.</h2><p>MatterLab 0.1 is a first working prototype. Explore sensible heating, compare material properties, estimate recoverable waste heat and record testable hypotheses. All results are model calculations—not measured laboratory data.</p></div>
+  <div class="card"><div class="metrics"><div class="metric"><strong>5</strong><span>Reference materials</span></div><div class="metric"><strong>3</strong><span>Interactive models</span></div><div class="metric"><strong>0.1</strong><span>Prototype version</span></div></div><div class="note">Start with the Thermal Lab, then compare materials and test a waste-heat recovery scenario.</div></div>
+ </div>
+ <div class="section-title"><h2>Laboratory modules</h2><small>Choose a module to begin</small></div>
+ <div class="grid">
+  <div class="card"><h3>01 · Thermal energy</h3><p class="muted">Calculate heat required to raise a material's temperature using Q = mcΔT.</p><button class="btn primary" onclick="showTab('thermal')">Open thermal lab →</button></div>
+  <div class="card"><h3>02 · Matter properties</h3><p class="muted">Compare specific heat capacity, density and energy per unit mass.</p><button class="btn primary" onclick="showTab('materials')">Compare materials →</button></div>
+  <div class="card"><h3>03 · Waste heat recovery</h3><p class="muted">Estimate heat flow, practical recovery and electrical output.</p><button class="btn primary" onclick="showTab('recovery')">Run recovery model →</button></div>
+  <div class="card"><h3>04 · Scientific method</h3><p class="muted">Separate input assumptions, model outputs, observations and uncertainty.</p><button class="btn primary" onclick="showTab('method')">View research protocol →</button></div>
+ </div>
+</section>
+
+<section id="thermal" class="hidden">
+ <div class="section-title"><h2>Thermal Lab · Sensible heating</h2><small>Model 01</small></div>
+ <div class="grid">
+  <div class="card">
+   <h3>Set experimental parameters</h3>
+   <div class="field"><label>Material <output id="matLabel">Water</output></label><select id="thermalMaterial"><option value="4.186">Water · 4.186 kJ/kg·K</option><option value="0.897">Aluminium · 0.897 kJ/kg·K</option><option value="0.385">Copper · 0.385 kJ/kg·K</option><option value="0.449">Iron · 0.449 kJ/kg·K</option><option value="1.005">Air · 1.005 kJ/kg·K (approx.)</option></select></div>
+   <div class="field"><label>Mass <output id="massOut">1.0 kg</output></label><input id="mass" type="range" min=".1" max="10" step=".1" value="1"></div>
+   <div class="field"><label>Temperature change <output id="deltaOut">50 °C</output></label><input id="delta" type="range" min="1" max="150" step="1" value="50"></div>
+   <div class="field"><label>Heater input power</label><input id="power" type="number" min="1" value="500"></div>
+   <div class="result"><small>Thermal energy required</small><div class="big" id="heatResult">209.30 kJ</div><small id="timeResult">Ideal heating time: 418.6 seconds</small></div>
+  </div>
+  <div class="card"><h3>Energy calculation</h3><div class="result"><div>Q = m × c × ΔT</div><div class="big" id="formulaResult">1 × 4.186 × 50</div><small>Assumes constant specific heat, no phase change and no heat loss.</small></div><h3 style="margin-top:18px">Interpretation</h3><p id="thermalInterpret" class="muted">Water requires 209.3 kJ for this idealized temperature rise.</p><div class="note">Real heating takes longer because the vessel, surroundings and heater have losses. The displayed time is an ideal lower-bound estimate.</div></div>
+ </div>
+</section>
+
+<section id="materials" class="hidden">
+ <div class="section-title"><h2>Matter Database · Property comparison</h2><small>Reference values, approximate near room temperature</small></div>
+ <div class="card">
+  <h3>Specific heat capacity comparison</h3><p class="muted">Higher specific heat means more energy is needed to raise one kilogram by one kelvin. It does not mean the material is a fuel or contains more chemical energy.</p>
+  <div id="materialRows"></div>
+  <div class="note">Values vary with temperature, pressure, composition and phase. Air value is approximate at ordinary conditions. This initial database is illustrative and should be verified against a trusted property reference before formal research.</div>
+ </div>
+ <div class="grid" style="margin-top:15px">
+  <div class="card"><h3>Important distinction</h3><p><b>Specific heat:</b> energy needed to change temperature.</p><p><b>Energy density:</b> energy available per mass or volume, with a defined process or storage method.</p><p><b>Reaction enthalpy:</b> heat absorbed or released by a specified chemical reaction.</p></div>
+  <div class="card"><h3>Research warning</h3><p class="muted">There is no universal “substance that supplies the most energy.” The answer depends on whether we mean fuel energy per kilogram, energy per litre, heat released in a particular reaction, or heat stored per kilogram over a temperature range.</p></div>
+ </div>
+</section>
+
+<section id="recovery" class="hidden">
+ <div class="section-title"><h2>Energy Recovery · Waste heat model</h2><small>Model 02</small></div>
+ <div class="grid">
+  <div class="card">
+   <h3>Define a hot stream</h3>
+   <div class="field"><label>Mass flow rate <output id="flowOut">0.10 kg/s</output></label><input id="flow" type="range" min=".01" max="2" step=".01" value=".1"></div>
+   <div class="field"><label>Specific heat capacity <output id="cpOut">1.005 kJ/kg·K</output></label><input id="cp" type="range" min=".4" max="4.5" step=".005" value="1.005"></div>
+   <div class="row"><div class="field"><label>Inlet temperature (°C)</label><input id="tin" type="number" value="180"></div><div class="field"><label>Outlet target (°C)</label><input id="tout" type="number" value="80"></div></div>
+   <div class="field"><label>Practical capture fraction <output id="captureOut">35%</output></label><input id="capture" type="range" min="0" max="90" step="1" value="35"></div>
+   <div class="field"><label>Conversion efficiency to electricity <output id="effOut">5%</output></label><input id="eff" type="range" min="0" max="30" step="1" value="5"></div>
+  </div>
+  <div class="card">
+   <h3>Estimated energy flow</h3>
+   <div class="result"><small>Thermal power available in stream</small><div class="big" id="available">10.05 kW</div></div>
+   <div class="result"><small>Captured thermal power</small><div class="big" id="captured">3.52 kW</div></div>
+   <div class="result"><small>Estimated electrical output</small><div class="big" id="electric">0.18 kW</div></div>
+   <div class="result"><small>Thermal power not captured</small><div class="big" id="uncaptured">6.53 kW</div></div>
+   <div class="note">This is a simplified steady-flow estimate: thermal power = mass flow × specific heat × temperature drop. Actual recovery depends on heat-exchanger limits, temperature gradients, pressure drop, fouling and the conversion device.</div>
+  </div>
+ </div>
+</section>
+
+<section id="method" class="hidden">
+ <div class="section-title"><h2>Research Method · Experimental discipline</h2><small>Protocol 01</small></div>
+ <div class="grid">
+  <div class="card"><h3>How to run a valid experiment</h3><ol class="muted"><li>Write a precise question and hypothesis.</li><li>Define the system boundary and what counts as input/output.</li><li>Record material identity, purity, mass and starting conditions.</li><li>Measure temperature, time, electrical input and surroundings.</li><li>Repeat trials and report uncertainty.</li><li>Compare measured values with model predictions.</li></ol></div>
+  <div class="card"><h3>Safety and evidence</h3><p class="muted">This prototype does not provide instructions for energetic chemical reactions. Begin with simulations and low-voltage, supervised heating experiments. Do not mix unknown chemicals, heat sealed containers, or test fuels or reactive substances in an improvised setup.</p><p class="muted">Keep three categories separate: published reference data, calculated model outputs and your own measured observations.</p></div>
+  <div class="card full"><h3>Experiment log</h3><div class="row"><div class="field"><label>Experiment title</label><input id="logTitle" placeholder="e.g. Heating water from 25 to 60 °C"></div><div class="field"><label>Observation / notes</label><input id="logNote" placeholder="Record what you observed"></div></div><button class="btn primary" id="saveLog">Save entry in this session</button> <button class="btn" id="exportLog">Export CSV</button><div id="logStatus" class="note">No observations saved yet. Entries remain in this browser session only.</div><div id="logList"></div></div>
+ </div>
+</section>
+</main>
+<footer>MatterLab · Digital Physics Laboratory · Prototype 0.1 · Educational model only. Validate reference data and calibrate instruments before using results for research claims.</footer>
+<script>
+const $=id=>document.getElementById(id);
+function showTab(tab){document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$(tab).classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+const materials=[{name:'Water',c:4.186},{name:'Air',c:1.005},{name:'Aluminium',c:.897},{name:'Iron',c:.449},{name:'Copper',c:.385}];
+function updateThermal(){let m=+$('mass').value,c=+$('thermalMaterial').value,d=+$('delta').value,p=Math.max(1,+$('power').value||1),q=m*c*d,t=q*1000/p;let name=$('thermalMaterial').selectedOptions[0].text.split(' ·')[0];$('massOut').textContent=m.toFixed(1)+' kg';$('deltaOut').textContent=d+' °C';$('matLabel').textContent=name;$('heatResult').textContent=q.toFixed(2)+' kJ';$('timeResult').textContent='Ideal heating time: '+t.toFixed(1)+' seconds';$('formulaResult').textContent=m.toFixed(1)+' × '+c.toFixed(3)+' × '+d;$('thermalInterpret').textContent=name+' requires approximately '+q.toFixed(2)+' kJ for this idealized temperature change.';}
+['mass','delta','thermalMaterial','power'].forEach(id=>$(id).addEventListener('input',updateThermal));
+function renderMaterials(){let max=4.186;$('materialRows').innerHTML=materials.map(x=>`<div style="margin:15px 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><b>${x.name}</b><span>${x.c.toFixed(3)} kJ/kg·K</span></div><div class="bar"><i style="width:${x.c/max*100}%"></i></div></div>`).join('');}
+function updateRecovery(){let f=+$('flow').value,cp=+$('cp').value,ti=+$('tin').value,to=+$('tout').value,cap=+$('capture').value/100,eff=+$('eff').value/100,drop=Math.max(0,ti-to),avail=f*cp*drop,captured=avail*cap,electric=captured*eff;$('flowOut').textContent=f.toFixed(2)+' kg/s';$('cpOut').textContent=cp.toFixed(3)+' kJ/kg·K';$('captureOut').textContent=(cap*100).toFixed(0)+'%';$('effOut').textContent=(eff*100).toFixed(0)+'%';$('available').textContent=avail.toFixed(2)+' kW';$('captured').textContent=captured.toFixed(2)+' kW';$('electric').textContent=electric.toFixed(3)+' kW';$('uncaptured').textContent=(avail-captured).toFixed(2)+' kW';}
+['flow','cp','tin','tout','capture','eff'].forEach(id=>$(id).addEventListener('input',updateRecovery));
+let logs=[];
+$('saveLog').addEventListener('click',()=>{let title=$('logTitle').value.trim(),note=$('logNote').value.trim();if(!title){$('logStatus').textContent='Please enter an experiment title first.';return;}logs.push({date:new Date().toISOString(),title,note});$('logTitle').value='';$('logNote').value='';$('logStatus').textContent=logs.length+' experiment log entr'+(logs.length===1?'y':'ies')+' saved in this session.';$('logList').innerHTML='<table><thead><tr><th>Time</th><th>Experiment</th><th>Observation</th></tr></thead><tbody>'+logs.map(l=>`<tr><td>${new Date(l.date).toLocaleString()}</td><td>${escapeHtml(l.title)}</td><td>${escapeHtml(l.note)}</td></tr>`).join('')+'</tbody></table>';});
+$('exportLog').addEventListener('click',()=>{if(!logs.length){$('logStatus').textContent='Add at least one log entry before exporting.';return;}let csv='Date,Experiment,Observation\\n'+logs.map(l=>[l.date,l.title,l.note].map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='matterlab-experiment-log.csv';a.click();URL.revokeObjectURL(a.href);});
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+updateThermal();renderMaterials();updateRecovery();
+</script>
+</body></html>
