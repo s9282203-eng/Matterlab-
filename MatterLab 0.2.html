@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MatterLab 0.2: Digital Physics Laboratory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1ec;--paper:#fbfcf8;--ink:#15231f;--mut:#5b6b64;--line:#cfd8d0;--grid:#e1e7df;--heat:#d4442a;--cold:#2563a8;--ok:#1f7a4d;--warn:#a86a00;
+--serif:"Newsreader",Georgia,"Times New Roman",serif;--sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101815;--paper:#17211d;--ink:#e8efe9;--mut:#9fb0a7;--line:#2c3b35;--grid:#1f2c27;--heat:#ff7a5c;--cold:#6fa8f0;--ok:#5fd093;--warn:#f0b24d}}
+:root[data-theme="dark"]{--bg:#101815;--paper:#17211d;--ink:#e8efe9;--mut:#9fb0a7;--line:#2c3b35;--grid:#1f2c27;--heat:#ff7a5c;--cold:#6fa8f0;--ok:#5fd093;--warn:#f0b24d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.wrap{max-width:1060px;margin:0 auto;padding:22px 18px 56px}
+h1{font:700 34px/1.1 var(--serif);margin:0}h2{font:700 22px/1.2 var(--serif);margin:0 0 6px}h3{font:600 14px var(--sans);margin:0 0 10px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.top p{margin:4px 0 0;color:var(--mut);max-width:520px}
+nav{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;border-bottom:2px solid var(--ink);padding-bottom:0}
+nav button{font:600 14px var(--sans);background:none;border:0;color:var(--mut);padding:10px 14px;cursor:pointer;white-space:nowrap;border-bottom:4px solid transparent;margin-bottom:-2px}
+nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--heat)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--cold);outline-offset:2px}
+.panel{display:none}.panel.on{display:block}
+.cols{display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px}
+.f{margin:0 0 14px}.f label{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-bottom:4px}.f output{color:var(--ink);font-weight:600}
+input[type=range]{width:100%;accent-color:var(--heat)}
+input[type=number],input[type=text],select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px}
+canvas{width:100%;height:280px;display:block;background:var(--paper);border:1px solid var(--line);border-radius:6px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.k{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:10px 12px}.k small{color:var(--mut);display:block;font-size:12px}.k b{font:700 22px var(--serif)}
+.k.h b{color:var(--heat)}.k.c b{color:var(--cold)}.k.g b{color:var(--ok)}
+.msg{margin-top:12px;padding:10px 12px;border-left:4px solid var(--cold);background:var(--paper);font-size:13px;color:var(--mut)}
+.msg.warn{border-left-color:var(--warn);color:var(--ink)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mat{margin:14px 0}.mat .hd{display:flex;justify-content:space-between;font-size:14px}.bar{height:10px;background:var(--grid);border-radius:2px;margin-top:5px}.bar i{display:block;height:100%;background:var(--cold);border-radius:2px}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:var(--mut);font-weight:600}
+.btn{font:600 14px var(--sans);background:var(--ink);color:var(--bg);border:0;border-radius:4px;padding:9px 14px;cursor:pointer}.btn.alt{background:none;color:var(--ink);border:1px solid var(--ink)}
+footer{margin-top:28px;font-size:12px;color:var(--mut)}
+@media(max-width:780px){.cols{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div><h1>MatterLab <small style="font:600 13px var(--sans);color:var(--mut)">0.2</small></h1><p>Heat a material, find where the energy goes, and test what could be recovered. Everything here is a model, not a measurement.</p></div></div>
+<nav role="tablist"><button role="tab" aria-selected="true" data-t="heat">Heating</button><button role="tab" aria-selected="false" data-t="mat">Materials</button><button role="tab" aria-selected="false" data-t="rec">Waste heat</button><button role="tab" aria-selected="false" data-t="log">Lab notebook</button></nav>
+
+<section id="heat" class="panel on">
+ <h2>Heating with losses</h2><p style="color:var(--mut);margin:0 0 14px">Ideal heating uses Q = mcΔT. Real heating also leaks heat to the room, so the curve flattens and may never reach your target.</p>
+ <div class="cols">
+  <div class="box">
+   <div class="f"><label>Material</label><select id="hm"></select></div>
+   <div class="f"><label>Mass <output id="hmO"></output></label><input id="hmass" type="range" min=".1" max="10" step=".1" value="1"></div>
+   <div class="row"><div class="f"><label>Start (°C)</label><input id="h0" type="number" value="20"></div><div class="f"><label>Target (°C)</label><input id="h1" type="number" value="80"></div></div>
+   <div class="f"><label>Heater power <output id="hpO"></output></label><input id="hp" type="range" min="50" max="3000" step="50" value="1000"></div>
+   <div class="f"><label>Heat loss to room <output id="hlO"></output></label><input id="hl" type="range" min="0" max="20" step=".5" value="3"></div>
+  </div>
+  <div>
+   <canvas id="cv" aria-label="Temperature against time"></canvas>
+   <div class="kpis"><div class="k h"><small>Energy needed</small><b id="kQ"></b></div><div class="k c"><small>Ideal time</small><b id="kI"></b></div><div class="k g"><small>Time with losses</small><b id="kR"></b></div></div>
+   <div class="msg" id="hmsg"></div>
+  </div>
+ </div>
+</section>
+
+<section id="mat" class="panel">
+ <h2>Material properties</h2><p style="color:var(--mut);margin:0 0 14px">Rank materials by a property. Values are typical room-temperature figures; check a trusted reference before formal work.</p>
+ <div class="box"><div class="f" style="max-width:320px"><label>Rank by</label><select id="mk"><option value="c">Specific heat (kJ/kg·K)</option><option value="vc">Heat per volume (kJ/m³·K)</option><option value="k">Thermal conductivity (W/m·K)</option><option value="rho">Density (kg/m³)</option></select></div><div id="mbars"></div></div>
+ <div class="box scroll" style="margin-top:14px"><table><thead><tr><th>Material</th><th>c (kJ/kg·K)</th><th>ρ (kg/m³)</th><th>k (W/m·K)</th><th>c·ρ (kJ/m³·K)</th><th>Melts (°C)</th></tr></thead><tbody id="mt"></tbody></table></div>
+ <div class="msg">High specific heat means a material needs more energy per kilogram to change temperature. It does not mean it holds more fuel energy.</div>
+</section>
+
+<section id="rec" class="panel">
+ <h2>Waste-heat recovery</h2><p style="color:var(--mut);margin:0 0 14px">Thermal power = flow × specific heat × temperature drop. Electricity is capped by the Carnot limit for your temperatures.</p>
+ <div class="cols">
+  <div class="box">
+   <div class="f"><label>Mass flow <output id="rfO"></output></label><input id="rf" type="range" min=".01" max="2" step=".01" value=".1"></div>
+   <div class="f"><label>Specific heat <output id="rcO"></output></label><input id="rc" type="range" min=".4" max="4.5" step=".005" value="1.005"></div>
+   <div class="row"><div class="f"><label>Inlet (°C)</label><input id="ri" type="number" value="180"></div><div class="f"><label>Outlet (°C)</label><input id="ro" type="number" value="80"></div></div>
+   <div class="f"><label>Room / cold side (°C)</label><input id="rt" type="number" value="25"></div>
+   <div class="f"><label>Heat captured <output id="rpO"></output></label><input id="rp" type="range" min="0" max="90" step="1" value="35"></div>
+   <div class="f"><label>Conversion efficiency <output id="reO"></output></label><input id="re" type="range" min="0" max="40" step="1" value="5"></div>
+  </div>
+  <div>
+   <div class="kpis"><div class="k h"><small>In the stream</small><b id="r1"></b></div><div class="k c"><small>Captured</small><b id="r2"></b></div><div class="k g"><small>Electricity</small><b id="r3"></b></div></div>
+   <div class="kpis"><div class="k"><small>Not captured</small><b id="r4"></b></div><div class="k"><small>Carnot limit</small><b id="r5"></b></div><div class="k"><small>Energy per day</small><b id="r6"></b></div></div>
+   <div class="msg" id="rmsg"></div>
+  </div>
+ </div>
+</section>
+
+<section id="log" class="panel">
+ <h2>Lab notebook</h2><p style="color:var(--mut);margin:0 0 14px">Keep model results apart from what you actually measured. Entries are saved in this browser when storage is available.</p>
+ <div class="box"><div class="row"><div class="f"><label>Experiment</label><input id="lt" type="text" placeholder="Heating 1 kg of water, 20 to 60 °C"></div><div class="f"><label>Observation</label><input id="ln" type="text" placeholder="Measured 4 min 10 s with a 1 kW kettle"></div></div>
+ <button class="btn" id="ls">Save entry</button> <button class="btn alt" id="lc">Show CSV</button> <button class="btn alt" id="lx">Clear all</button>
+ <div class="msg" id="lm">No entries yet. Add a title to save your first one.</div><div class="scroll" id="ll" style="margin-top:12px"></div><textarea id="lcsv" rows="5" readonly style="display:none;margin-top:12px" aria-label="CSV text"></textarea></div>
+ <div class="msg warn">Safety: start with simulation and supervised low-voltage heating. Never heat sealed containers or mix unknown chemicals.</div>
+</section>
+<footer>MatterLab 0.2 is an educational model. Calibrate instruments and verify reference data before making research claims.</footer>
+</div>
+<script>
+const $=i=>document.getElementById(i);
+const M=[{n:'Water',c:4.186,r:997,k:.6,m:0},{n:'Aluminium',c:.897,r:2700,k:237,m:660},{n:'Iron',c:.449,r:7870,k:80,m:1538},{n:'Copper',c:.385,r:8960,k:401,m:1085},{n:'Air',c:1.005,r:1.2,k:.026,m:null}];
+M.forEach(x=>x.vc=x.c*x.r);
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id===b.dataset.t));if(b.dataset.t==='heat')heat()});
+$('hm').innerHTML=M.map((x,i)=>`<option value="${i}">${x.n}</option>`).join('');
+const fmtT=s=>!isFinite(s)?'never':s<90?s.toFixed(0)+' s':s<5400?(s/60).toFixed(1)+' min':(s/3600).toFixed(2)+' h';
+function heat(){
+ const x=M[+$('hm').value],m=+$('hmass').value,t0=+$('h0').value,t1=+$('h1').value,P=+$('hp').value,h=+$('hl').value,d=t1-t0;
+ $('hmO').textContent=m.toFixed(1)+' kg';$('hpO').textContent=P+' W';$('hlO').textContent=h.toFixed(1)+' W/K';
+ const C=m*x.c*1000,Q=C*Math.max(d,0)/1000,ti=Math.max(d,0)*C/P;
+ const tr=h===0?ti:(h*d<P?-(C/h)*Math.log(1-h*d/P):Infinity);
+ $('kQ').textContent=Q.toFixed(1)+' kJ';$('kI').textContent=fmtT(ti);$('kR').textContent=fmtT(tr);
+ const tmax=t0+P/(h||1e-9);
+ let s=d<=0?'Target must be above the start temperature.':!isFinite(tr)?`With these losses the heater levels off near ${tmax.toFixed(0)} °C, so it cannot reach ${t1} °C. Raise power or cut losses.`:`Losses add ${(tr-ti>0?tr-ti:0).toFixed(0)} s compared with the ideal case. About ${(h>0&&isFinite(tr)?(Q*1000-0)/1000:Q).toFixed(0)} kJ goes into the ${x.n.toLowerCase()}; the rest of the heater's output leaks away.`;
+ $('hmsg').className='msg'+(!isFinite(tr)||d<=0?' warn':'');$('hmsg').textContent=s;
+ draw(C,P,h,t0,t1,tr,ti,tmax);
+}
+function draw(C,P,h,t0,t1,tr,ti,tmax){
+ const cv=$('cv'),dpr=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;if(!W)return;cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.scale(dpr,dpr);
+ const cs=getComputedStyle(document.documentElement),col=n=>cs.getPropertyValue(n).trim();
+ const tEnd=Math.max(isFinite(tr)?tr*1.25:ti*3,ti*1.25,10),yMax=Math.max(t1,t0+1)+(t1-t0)*.15,yMin=t0,L=44,B=26,T=10,R=12;
+ const X=t=>L+(W-L-R)*t/tEnd,Y=v=>H-B-(H-B-T)*(v-yMin)/(yMax-yMin);
+ g.strokeStyle=col('--line');g.fillStyle=col('--mut');g.font='11px sans-serif';g.lineWidth=1;
+ for(let i=0;i<=4;i++){const v=yMin+(yMax-yMin)*i/4,y=Y(v);g.beginPath();g.moveTo(L,y);g.lineTo(W-R,y);g.stroke();g.fillText(v.toFixed(0)+'°',4,y+4)}
+ for(let i=0;i<=4;i++){const t=tEnd*i/4;g.fillText(fmtT(t),X(t)-12,H-8)}
+ g.setLineDash([5,4]);g.strokeStyle=col('--cold');g.beginPath();g.moveTo(X(0),Y(t0));g.lineTo(X(ti),Y(t1));g.stroke();
+ g.strokeStyle=col('--mut');g.beginPath();g.moveTo(L,Y(t1));g.lineTo(W-R,Y(t1));g.stroke();g.setLineDash([]);
+ g.strokeStyle=col('--heat');g.lineWidth=3;g.beginPath();
+ for(let i=0;i<=120;i++){const t=tEnd*i/120,v=h===0?t0+P*t/C:t0+(P/h)*(1-Math.exp(-h*t/C));i?g.lineTo(X(t),Y(Math.min(v,yMax))):g.moveTo(X(t),Y(v))}g.stroke();
+ g.lineWidth=1;g.fillStyle=col('--heat');g.fillText('with losses',L+8,T+12);g.fillStyle=col('--cold');g.fillText('ideal (dashed)',L+80,T+12);
+}
+['hm','hmass','h0','h1','hp','hl'].forEach(i=>$(i).addEventListener('input',heat));addEventListener('resize',heat);
+function mats(){const k=$('mk').value,mx=Math.max(...M.map(x=>x[k])),u={c:'kJ/kg·K',vc:'kJ/m³·K',k:'W/m·K',rho:'kg/m³'};
+ $('mbars').innerHTML=[...M].sort((a,b)=>b[k]-a[k]).map(x=>{const v=x[k==='rho'?'r':k];return`<div class="mat"><div class="hd"><b>${x.n}</b><span>${v<10?v.toPrecision(3):Math.round(v).toLocaleString()} ${u[k]}</span></div><div class="bar"><i style="width:${Math.max(v/mx*100,1)}%"></i></div></div>`}).join('');
+ $('mt').innerHTML=M.map(x=>`<tr><td>${x.n}</td><td>${x.c}</td><td>${x.r}</td><td>${x.k}</td><td>${Math.round(x.vc).toLocaleString()}</td><td>${x.m===null?'n/a':x.m}</td></tr>`).join('')}
+M.forEach(x=>x.rho=x.r);$('mk').addEventListener('input',mats);
+function rec(){
+ const f=+$('rf').value,c=+$('rc').value,ti=+$('ri').value,to=+$('ro').value,tc=+$('rt').value,cp=+$('rp').value/100,e=+$('re').value/100;
+ $('rfO').textContent=f.toFixed(2)+' kg/s';$('rcO').textContent=c.toFixed(3)+' kJ/kg·K';$('rpO').textContent=(cp*100).toFixed(0)+'%';$('reO').textContent=(e*100).toFixed(0)+'%';
+ const a=f*c*Math.max(0,ti-to),cap=a*cp,th=(ti+to)/2+273.15,car=Math.max(0,1-(tc+273.15)/th),el=cap*e;
+ $('r1').textContent=a.toFixed(2)+' kW';$('r2').textContent=cap.toFixed(2)+' kW';$('r3').textContent=el.toFixed(3)+' kW';$('r4').textContent=(a-cap).toFixed(2)+' kW';$('r5').textContent=(car*100).toFixed(1)+'%';$('r6').textContent=(el*24).toFixed(1)+' kWh';
+ const bad=e>car,low=ti<=to;
+ $('rmsg').className='msg'+(bad||low?' warn':'');
+ $('rmsg').textContent=low?'Inlet must be hotter than the outlet.':bad?`A ${(e*100).toFixed(0)}% conversion exceeds the Carnot limit of ${(car*100).toFixed(1)}% for these temperatures, so no real device could reach it. Real engines usually reach well under half of Carnot.`:`Your conversion efficiency is ${(car?e/car*100:0).toFixed(0)}% of the Carnot limit, which is plausible for a real device.`;
+}
+['rf','rc','ri','ro','rt','rp','re'].forEach(i=>$(i).addEventListener('input',rec));
+let logs=[];try{logs=JSON.parse(localStorage.getItem('ml02')||'[]')}catch(e){}
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){try{localStorage.setItem('ml02',JSON.stringify(logs))}catch(e){}}
+function showLog(){$('ll').innerHTML=logs.length?'<table><thead><tr><th>Time</th><th>Experiment</th><th>Observation</th></tr></thead><tbody>'+logs.map(l=>`<tr><td>${new Date(l.d).toLocaleString()}</td><td>${esc(l.t)}</td><td style="white-space:normal;text-align:left">${esc(l.n)}</td></tr>`).join('')+'</tbody></table>':'';
+ if(logs.length)$('lm').textContent=logs.length+(logs.length===1?' entry saved.':' entries saved.')}
+$('ls').onclick=()=>{const t=$('lt').value.trim(),n=$('ln').value.trim();if(!t){$('lm').textContent='Add an experiment title to save the entry.';return}logs.push({d:new Date().toISOString(),t,n});$('lt').value=$('ln').value='';save();showLog()};
+$('lc').onclick=()=>{const a=$('lcsv');if(!logs.length){$('lm').textContent='Save at least one entry to see its CSV.';return}a.value='Date,Experiment,Observation\n'+logs.map(l=>[l.d,l.t,l.n].map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');a.style.display='block';a.select()};
+$('lx').onclick=()=>{logs=[];save();showLog();$('lcsv').style.display='none';$('lm').textContent='Notebook cleared.'};
+heat();mats();rec();showLog();
+</script>
+</body>
+</html>
