@@ -1,0 +1,123 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>MatterLab | Einstein Free-Fall Lab</title>
+<style>
+:root{color-scheme:light;--bg:#f4f7fb;--p:#fff;--p2:#eaf0f7;--line:#c9d6e6;--txt:#12233a;--muted:#52667f;--acc:#0b7f96;--ab:#d5eef3;--fld:#fff;--wb:#fff6dd;--wt:#6b5314;--ok:#dff5ea;--ot:#14533a;--s1:#eaf3fb;--s2:#dce9f6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#0b1220;--p:#132139;--p2:#1b2d46;--line:#304660;--txt:#edf4ff;--muted:#a9bbd2;--acc:#62d4e8;--ab:#16485b;--fld:#091525;--wb:#302919;--wt:#f7d99d;--ok:#17362f;--ot:#baf2d9;--s1:#10243b;--s2:#0b1728}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0b1220;--p:#132139;--p2:#1b2d46;--line:#304660;--txt:#edf4ff;--muted:#a9bbd2;--acc:#62d4e8;--ab:#16485b;--fld:#091525;--wb:#302919;--wt:#f7d99d;--ok:#17362f;--ot:#baf2d9;--s1:#10243b;--s2:#0b1728}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,Arial,sans-serif}
+header{padding:18px 4%;background:var(--p);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{font-size:21px;margin:0}h2{font-size:17px;margin:0 0 12px}.muted{color:var(--muted);font-size:13px}
+.tag{color:var(--acc);border:1px solid var(--acc);border-radius:20px;padding:4px 10px;font-size:12px;align-self:center}
+nav{display:flex;gap:8px;padding:12px 4%;border-bottom:1px solid var(--line);overflow:auto}
+button{cursor:pointer;font:inherit;color:var(--txt);background:var(--p);border:1px solid var(--line);border-radius:8px;padding:9px 13px;white-space:nowrap}button.active,.primary{background:var(--ab);border-color:var(--acc)}
+main{max-width:1350px;margin:auto;padding:20px 4%}.tab{display:none}.tab.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}.card{background:var(--p);border:1px solid var(--line);border-radius:13px;padding:16px;min-width:0}.s4{grid-column:span 4}.s8{grid-column:span 8}.s6{grid-column:span 6}.s12{grid-column:span 12}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+input,select{width:100%;padding:10px;background:var(--fld);color:var(--txt);border:1px solid var(--line);border-radius:8px;font:inherit}.dim{opacity:.45}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.stage{height:330px;background:linear-gradient(var(--s1),var(--s2));border:1px solid var(--line);border-radius:10px;overflow:hidden}.stage.pl{height:340px;background:var(--p2)}canvas{width:100%;height:100%;display:block}
+.metrics,.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:10px}.metric,.result{background:var(--p2);padding:11px;border-radius:9px}.metric b,.result b{display:block;font-size:18px;overflow-wrap:anywhere}.metric small,.result small{font-size:11px;color:var(--muted)}
+.msg{display:none;margin-top:10px;padding:10px;background:var(--ok);color:var(--ot);border-radius:8px;font-size:13px}.msg.show{display:block}.msg.err{background:var(--wb);color:var(--wt)}
+.eq{font:13px/2 ui-monospace,monospace;background:var(--p2);padding:12px;border-radius:8px;overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}td,th{padding:8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.scroll{overflow:auto}
+footer{padding:18px 4%;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+@media(max-width:800px){.s4,.s8,.s6{grid-column:span 12}.metrics,.results{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.form{grid-template-columns:1fr}.stage{height:280px}}
+</style></head><body>
+<header><div><h1>MatterLab · <span style="color:var(--acc)">Einstein Free-Fall Lab</span></h1><div class="muted">Free-fall experiment, motion plots and gravitational time dilation</div></div><span class="tag">SIMULATION v1.1</span></header>
+<nav><button class="active" data-tab="lab">Experiment</button><button data-tab="pl">Plots</button><button data-tab="rel">Time dilation</button><button data-tab="theory">Theory</button><button data-tab="data">Data table</button></nav>
+<main>
+<section id="lab" class="tab active"><div class="grid">
+<div class="card s4"><h2>Experiment controls</h2><div class="form">
+<div><label for="h">Drop height (m)</label><input id="h" type="number" value="20" step="any"></div>
+<div><label for="v0">Initial velocity (m/s, down +, up −)</label><input id="v0" type="number" value="0" step="any"></div>
+<div><label for="gp">World</label><select id="gp"><option value="9.81">Earth</option><option value="1.62">Moon</option><option value="3.71">Mars</option><option value="24.79">Jupiter</option><option value="c">Custom</option></select></div>
+<div><label for="g">Gravity (m/s²)</label><input id="g" type="number" value="9.81" step="any"></div>
+<div><label for="m">Object mass (kg)</label><input id="m" type="number" value="1" step="any"></div>
+<div><label for="drag">Air resistance</label><select id="drag"><option value="off">Off — ideal free fall</option><option value="on">On — quadratic drag</option></select></div>
+<div class="dr"><label for="cd">Drag coefficient Cd</label><input id="cd" type="number" value=".47" step="any"></div>
+<div class="dr"><label for="area">Frontal area (m²)</label><input id="area" type="number" value=".01" step="any"></div>
+<div class="dr"><label for="rho">Air density (kg/m³)</label><input id="rho" type="number" value="1.225" step="any"></div>
+<div><label for="sp">Playback speed</label><select id="sp"><option value="auto">Auto (about 4 s)</option><option value=".25">0.25×</option><option value="1">1× real time</option><option value="2">2×</option></select></div>
+</div><div class="actions"><button class="primary" id="run">Run / replay</button><button id="pause">Pause</button><button id="reset">Reset</button><button id="save">Save result</button></div><div id="msg" class="msg" aria-live="polite"></div><p class="muted">Greyed drag fields apply only when air resistance is on; terminal speed is still shown for them.</p></div>
+<div class="card s8"><h2>Free-fall visualisation</h2><div class="stage"><canvas id="scene"></canvas></div><div class="metrics">
+<div class="metric"><b id="time">0.000 s</b><small>Elapsed time</small></div><div class="metric"><b id="pos">—</b><small>Height above ground</small></div><div class="metric"><b id="vel">—</b><small>Downward velocity</small></div><div class="metric"><b id="acc">—</b><small>Acceleration</small></div></div></div>
+<div class="card s12"><h2>Calculated results</h2><div class="results">
+<div class="result"><small>Time to impact</small><b id="impact">—</b></div><div class="result"><small>Impact speed</small><b id="iv">—</b></div><div class="result"><small>Impact kinetic energy</small><b id="ke">—</b></div><div class="result"><small>Maximum speed</small><b id="maxv">—</b></div>
+<div class="result"><small>Maximum height (apex)</small><b id="apex">—</b></div><div class="result"><small>Terminal speed (with drag)</small><b id="vt">—</b></div><div class="result"><small>Impact speed vs terminal</small><b id="pct">—</b></div><div class="result"><small>Delay caused by drag</small><b id="dly">—</b></div></div>
+<p class="muted">Integrated with a 4th-order Runge–Kutta solver (2 ms step); the impact instant is interpolated within the final step.</p></div>
+</div></section>
+<section id="pl" class="tab"><div class="card"><h2>Motion plot</h2><div class="form"><div><label for="pm">Quantity</label><select id="pm"><option value="v">Velocity v(t)</option><option value="y">Height y(t)</option><option value="a">Acceleration a(t)</option></select></div></div><div class="stage pl" style="margin-top:12px"><canvas id="plot"></canvas></div><p class="muted">Solid line: current run. Dashed line: ideal no-drag motion (when drag is on). Dotted line: terminal speed. The marker follows the animation.</p></div></section>
+<section id="rel" class="tab"><div class="grid">
+<div class="card s4"><h2>Two clocks</h2><label for="body">Central body</label><select id="body"><option value="earth">Earth</option><option value="moon">Moon</option><option value="sun">Sun</option><option value="ns">Neutron star (1.4 M☉, 12 km)</option></select>
+<div class="form"><div><label for="a1">Clock A altitude (m)</label><input id="a1" type="number" value="0" step="any"></div><div><label for="u1">Clock A speed (m/s)</label><input id="u1" type="number" value="0" step="any"></div><div><label for="a2">Clock B altitude (m)</label><input id="a2" type="number" value="20" step="any"></div><div><label for="u2">Clock B speed (m/s)</label><input id="u2" type="number" value="0" step="any"></div></div>
+<div class="actions"><button data-pre="drop">Drop-lab heights</button><button data-pre="ever">Everest</button><button data-pre="gps">GPS satellite</button></div><div class="actions"><button id="useg">Use this body’s g in the experiment</button></div><div id="rmsg" class="msg" aria-live="polite"></div></div>
+<div class="card s8"><h2>Clock B relative to clock A</h2><p id="verdict" class="muted"></p><div class="results" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+<div class="result"><small>Total rate difference</small><b id="rt">—</b></div><div class="result"><small>Gravitational part</small><b id="rg">—</b></div><div class="result"><small>Motion part</small><b id="rv">—</b></div>
+<div class="result"><small>Offset per day</small><b id="rd">—</b></div><div class="result"><small>Offset per year</small><b id="ry">—</b></div><div class="result"><small>Offset during this fall</small><b id="rf">—</b></div></div><p id="facts" class="muted"></p>
+<p class="muted">Static or circular-orbit clocks in the Schwarzschild exterior; Earth’s rotation and body oblateness are ignored. Positive means B ticks faster than A.</p></div>
+</div></section>
+<section id="theory" class="tab"><div class="grid"><div class="card s6"><h2>Einstein and free fall</h2><p class="muted">The equivalence principle says that locally, free fall is indistinguishable from weightlessness in a small freely falling laboratory. In a small region, at speeds far below light and in a weak field, Newtonian constant-acceleration motion is an excellent approximation. The mechanics here is classical; only the time-dilation tab uses a relativistic formula.</p><p class="muted">Physical drop tests need a secured release, a clear drop zone and supervision. This simulation ignores wind, buoyancy, tumbling and altitude-dependent gravity.</p></div>
+<div class="card s6"><h2>Ideal free fall</h2><div class="eq">y(t) = h − v₀t − ½gt²<br>v(t) = v₀ + gt<br>t_impact = (√(v₀² + 2gh) − v₀) / g<br>KE = ½mv²</div></div>
+<div class="card s6"><h2>Quadratic drag and terminal speed</h2><div class="eq">m·dv/dt = mg − ½ρC<sub>d</sub>A·v|v|<br>v_t = √(2mg / (ρC<sub>d</sub>A))<br>τ = v_t / g (approach time scale)</div><p class="muted">At v_t drag balances weight and acceleration is zero. A fall shorter than a few τ never gets close to v_t.</p></div>
+<div class="card s6"><h2>Gravitational time dilation</h2><div class="eq">r_s = 2GM / c²<br>dτ/dt = √(1 − r_s/r − u²/c²)<br>weak field: Δf ≈ g·Δh / c²</div><p class="muted">Differences are computed as exact algebraic differences, so tiny effects such as 10⁻¹⁵ keep their precision.</p></div></div></section>
+<section id="data" class="tab"><div class="card"><div class="actions" style="justify-content:space-between;margin-top:0"><div><h2>Saved experiment runs</h2><p class="muted">Kept in memory until this page is refreshed.</p></div><button id="csv">Export CSV</button></div><div class="scroll"><table><thead><tr><th>Run</th><th>Height m</th><th>v₀ m/s</th><th>g m/s²</th><th>Mass kg</th><th>Drag</th><th>Cd</th><th>Area m²</th><th>Time s</th><th>Impact m/s</th><th>Energy J</th><th>Apex m</th><th>Terminal m/s</th></tr></thead><tbody id="rows"></tbody></table></div></div></section>
+</main><footer>MatterLab · Einstein Free-Fall Lab v1.1 · Offline browser simulation</footer>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),C=299792458,css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let c,R,t=0,play=false,last=0,recs=[],tI=0;
+const f=(x,n=3)=>Number.isFinite(x)?x.toFixed(n):'—',ex=x=>(x>0?'+':x<0?'−':'')+Math.abs(x).toExponential(3);
+const dur=s=>{if(!s)return '0 s';const a=Math.abs(s),u=[[1,'s'],[1e-3,'ms'],[1e-6,'µs'],[1e-9,'ns'],[1e-12,'ps'],[1e-15,'fs']].find(x=>a>=x[0])||[1e-15,'fs'],v=a/u[0];return(s<0?'−':'+')+(v>=1000?v.toFixed(0):v.toPrecision(3))+' '+u[1]};
+const msg=(s,e)=>{const m=$('msg');m.textContent=s;m.className='msg show'+(e?' err':'')};
+function read(){const q={h:+$('h').value,v0:+$('v0').value,g:+$('g').value,m:+$('m').value,drag:$('drag').value==='on',cd:+$('cd').value,A:+$('area').value,rho:+$('rho').value};
+if(!(q.h>0&&q.h<=1e4&&q.g>0&&q.m>0&&Math.abs(q.v0)<=1e3))throw Error('Enter valid values: height 0–10,000 m, positive gravity and mass, |v₀| ≤ 1000 m/s.');
+if(!(q.A>0&&q.cd>=0&&q.rho>=0))throw Error('Area must be positive; Cd and density cannot be negative.');
+q.k0=.5*q.rho*q.cd*q.A;q.k=q.drag?q.k0:0;return q}
+function solve(q){const dt=.002,acc=v=>q.g-q.k*v*Math.abs(v)/q.m;let y=q.h,v=q.v0,n=0,T=[0],Y=[y],V=[v],mx=Math.abs(v),top=y;
+for(;;){const a1=acc(v),v2=v+a1*dt/2,a2=acc(v2),v3=v+a2*dt/2,a3=acc(v3),v4=v+a3*dt,a4=acc(v4),ny=y-dt/6*(v+2*v2+2*v3+v4),nv=v+dt/6*(a1+2*a2+2*a3+a4);n++;
+if(ny<=0){const r=y/(y-ny),tm=(n-1+r)*dt,vi=v+r*(nv-v);T.push(tm);Y.push(0);V.push(vi);return{T,Y,V,time:tm,v:vi,ke:.5*q.m*vi*vi,max:Math.max(mx,Math.abs(vi)),top}}
+y=ny;v=nv;top=Math.max(top,y);mx=Math.max(mx,Math.abs(v));if(n%5===0){T.push(n*dt);Y.push(y);V.push(v)}
+if(n>1.5e6)throw Error('Fall lasts over 3,000 s. Reduce the height or drag.')}}
+function at(x){x=Math.min(x,R.time);let a=0,b=R.T.length-1;while(b-a>1){const m=(a+b)>>1;R.T[m]<=x?a=m:b=m}const p=(x-R.T[a])/((R.T[b]-R.T[a])||1),y=R.Y[a]+p*(R.Y[b]-R.Y[a]),v=R.V[a]+p*(R.V[b]-R.V[a]);return{y,v,a:c.g-c.k*v*Math.abs(v)/c.m}}
+function fit(cv){const d=devicePixelRatio||1,w=Math.round(cv.clientWidth*d),h=Math.round(cv.clientHeight*d);if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}const x=cv.getContext('2d');x.setTransform(d,0,0,d,0,0);return x}
+function draw(){const cv=$('scene');if(!c||!cv.clientWidth)return;const x=fit(cv),w=cv.clientWidth,h=cv.clientHeight,gr=h-30,tp=24,cx=w/2,mu=css('--muted'),tx=css('--txt'),ac=css('--acc'),my=y=>gr-11-y/R.top*(gr-tp-11),s=at(t),by=my(s.y);
+x.clearRect(0,0,w,h);x.strokeStyle=mu;x.lineWidth=2;x.beginPath();x.moveTo(cx,tp);x.lineTo(cx,gr);x.moveTo(cx-70,gr);x.lineTo(cx+70,gr);x.stroke();
+x.fillStyle=tx;x.font='12px system-ui';x.fillText('Release point',cx+18,my(c.h)+4);x.fillText('Ground',cx+18,gr);if(R.top>c.h*1.0001)x.fillText('Apex',cx+18,tp+4);
+const L=Math.sign(s.v)*38*Math.min(1,Math.abs(s.v)/R.max);x.strokeStyle=ac;x.beginPath();x.moveTo(cx+30,by);x.lineTo(cx+30,by+L);x.stroke();
+x.fillStyle=ac;x.beginPath();x.arc(cx,by,11,0,7);x.fill();x.fillStyle=mu;x.fillText('Height '+f(c.h,2)+' m · '+(c.drag?'quadratic drag':'ideal free fall'),12,18)}
+function plot(){const cv=$('plot');if(!c||!cv.clientWidth)return;const x=fit(cv),W=cv.clientWidth,H=cv.clientHeight,m=$('pm').value,L=54,Rg=12,Tp=16,B=28,ac=css('--acc'),mu=css('--muted'),ln=css('--line'),wt=css('--wt'),tx=css('--txt');
+const val=(y,v,i)=>m==='v'?v:m==='y'?y:c.g-(i?0:c.k)*v*Math.abs(v)/c.m,st=Math.max(1,Math.floor(R.T.length/700)),S=[],I=[];
+for(let i=0;i<R.T.length;i+=st)S.push([R.T[i],val(R.Y[i],R.V[i])]);const e=R.T.length-1;if(e%st)S.push([R.T[e],val(R.Y[e],R.V[e])]);
+if(c.drag)for(let i=0;i<=200;i++){const q=tI*i/200;I.push([q,val(c.h-c.v0*q-.5*c.g*q*q,c.v0+c.g*q,1)])}
+const showVt=m==='v'&&c.drag&&isFinite(c.vt),all=S.concat(I).map(p=>p[1]).concat(showVt?[c.vt]:[],[0]),xm=Math.max(R.time,c.drag?tI:0);let lo=Math.min(...all),hi=Math.max(...all);if(hi===lo)hi=lo+1;const pd=(hi-lo)*.06;if(lo<0)lo-=pd;hi+=pd;
+const px=q=>L+q/xm*(W-L-Rg),py=v=>Tp+(hi-v)/(hi-lo)*(H-Tp-B),tk=v=>Math.abs(v)>=1e4||(v&&Math.abs(v)<.01)?v.toExponential(1):String(+v.toPrecision(3));
+x.clearRect(0,0,W,H);x.font='11px system-ui';x.lineWidth=1;
+for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4,q=xm*i/4;x.strokeStyle=ln;x.beginPath();x.moveTo(L,py(v));x.lineTo(W-Rg,py(v));x.moveTo(px(q),Tp);x.lineTo(px(q),H-B);x.stroke();x.fillStyle=mu;x.textAlign='right';x.fillText(tk(v),L-6,py(v)+4);x.textAlign='center';x.fillText(tk(q),px(q),H-B+14)}
+x.textAlign='left';x.fillStyle=tx;x.fillText({v:'Downward velocity (m/s)',y:'Height (m)',a:'Acceleration (m/s²)'}[m]+' vs time (s)',L+6,Tp+12);
+const pth=P=>{x.beginPath();P.forEach((p,i)=>x[i?'lineTo':'moveTo'](px(p[0]),py(p[1])));x.stroke()};
+x.lineWidth=2;if(I.length){x.strokeStyle=mu;x.setLineDash([6,4]);pth(I)}if(showVt){x.strokeStyle=wt;x.setLineDash([2,3]);pth([[0,c.vt],[xm,c.vt]]);x.fillStyle=wt;x.fillText('terminal '+tk(c.vt),L+6,py(c.vt)-4)}
+x.setLineDash([]);x.strokeStyle=ac;pth(S);const q=Math.min(t,R.time),s=at(q);x.fillStyle=ac;x.beginPath();x.arc(px(q),py(val(s.y,s.v)),5,0,7);x.fill()}
+function upd(){if(!c)return;const s=at(t);$('time').textContent=f(Math.min(t,R.time))+' s';$('pos').textContent=f(s.y)+' m';$('vel').textContent=f(s.v)+' m/s';$('acc').textContent=f(s.a)+' m/s²';draw();plot()}
+function fill(){const vt=c.k0>0?Math.sqrt(c.m*c.g/c.k0):Infinity;c.vt=vt;tI=(-c.v0+Math.sqrt(c.v0*c.v0+2*c.g*c.h))/c.g;const d=R.time-tI;
+Object.entries({impact:f(R.time)+' s',iv:f(R.v)+' m/s',ke:f(R.ke)+' J',maxv:f(R.max)+' m/s',apex:f(R.top)+' m',vt:isFinite(vt)?f(vt)+' m/s':'∞ (no drag)',pct:c.drag&&isFinite(vt)?f(R.v/vt*100,1)+' %':'—',dly:(d<0?'−':'+')+f(Math.abs(d))+' s'}).forEach(([k,v])=>$(k).textContent=v)}
+function reset(){play=false;last=0;$('pause').textContent='Pause';try{c=read();R=solve(c);t=0;fill();$('msg').className='msg';document.querySelectorAll('.dr').forEach(e=>e.classList.toggle('dim',!c.drag));upd();rel();return true}catch(e){c=R=null;msg(e.message,1);return false}}
+function go(){play=true;last=0;$('pause').textContent='Pause';requestAnimationFrame(fr)}
+function fr(now){if(!play)return;if(!last)last=now;const sp=$('sp').value,rate=sp==='auto'?Math.max(.25,R.time/4):+sp;t=Math.min(R.time,t+(now-last)/1000*rate);last=now;upd();if(t>=R.time){play=false;last=0;$('pause').textContent='Resume'}else requestAnimationFrame(fr)}
+$('run').onclick=()=>{if(reset())go()};$('reset').onclick=reset;
+$('pause').onclick=()=>{if(!c)return;if(play){play=false;$('pause').textContent='Resume'}else{if(t>=R.time)t=0;go()}};
+$('save').onclick=()=>{if(!c)return;recs.push({n:recs.length+1,...c,time:R.time,iv:R.v,ke:R.ke,top:R.top});rows();msg('Result saved to data table.')};
+function rows(){const b=$('rows');b.innerHTML='';if(!recs.length){b.innerHTML='<tr><td colspan="13">No saved runs.</td></tr>';return}recs.forEach(r=>{const tr=document.createElement('tr');[r.n,f(r.h),f(r.v0),f(r.g),f(r.m),r.drag?'On':'Off',r.drag?r.cd:'—',r.drag?r.A:'—',f(r.time),f(r.iv),f(r.ke),f(r.top),isFinite(r.vt)?f(r.vt):'∞'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});b.append(tr)})}
+$('csv').onclick=()=>{if(!recs.length){alert('Save a run first.');return}const hd=['Run','Height_m','Initial_velocity_m_s','Gravity_m_s2','Mass_kg','Drag','Cd','Area_m2','Air_density_kg_m3','Impact_time_s','Impact_speed_m_s','Impact_energy_J','Apex_m','Terminal_speed_m_s'],q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',L=[hd.map(q).join(',')];
+recs.forEach(r=>L.push([r.n,r.h,r.v0,r.g,r.m,r.drag,r.cd,r.A,r.rho,r.time,r.iv,r.ke,r.top,r.vt].map(q).join(',')));const u=URL.createObjectURL(new Blob(['\ufeff'+L.join('\r\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=u;a.download='matterlab_freefall_data.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1200)};
+const BODY={earth:[3.986004418e14,6.371e6],moon:[4.9048695e12,1.7374e6],sun:[1.32712440018e20,6.957e8],ns:[1.858e20,1.2e4]},PRE={drop:()=>['earth',0,0,c?c.h:20,0],ever:()=>['earth',0,0,8848,0],gps:()=>['earth',0,0,2.02e7,3874]};
+function rel(){const rm=$('rmsg');try{const[GM,Rb]=BODY[$('body').value],rs=2*GM/C**2,a1=+$('a1').value,a2=+$('a2').value,u1=+$('u1').value,u2=+$('u2').value,r1=Rb+a1,r2=Rb+a2,X1=rs/r1+u1*u1/C**2,X2=rs/r2+u2*u2/C**2;
+if(a1<0||a2<0||X1>=1||X2>=1)throw Error('Altitudes must be ≥ 0 and speeds must be physically possible at that radius.');
+const fr=(d,n)=>{const q=d/n;return q/(Math.sqrt(1+q)+1)},gd=rs*(r2-r1)/(r1*r2),vd=(u1*u1-u2*u2)/C**2,tot=fr(gd+vd,1-X1);
+$('rt').textContent=ex(tot);$('rg').textContent=ex(fr(gd,1-rs/r1));$('rv').textContent=ex(fr(vd,1-u1*u1/C**2));$('rd').textContent=dur(tot*86400);$('ry').textContent=dur(tot*31557600);$('rf').textContent=R?dur(tot*R.time):'—';
+$('verdict').textContent=tot>0?'Clock B ticks faster than clock A.':tot<0?'Clock B ticks slower than clock A.':'The clocks tick at the same rate.';
+$('facts').textContent='Schwarzschild radius '+rs.toPrecision(3)+' m · surface gravity '+(GM/Rb/Rb).toPrecision(3)+' m/s² · r_s/R = '+(rs/Rb).toExponential(2);rm.className='msg'}catch(e){rm.textContent=e.message;rm.className='msg show err'}}
+document.querySelectorAll('[data-pre]').forEach(b=>b.onclick=()=>{const p=PRE[b.dataset.pre]();['body','a1','u1','a2','u2'].forEach((id,i)=>$(id).value=p[i]);rel()});
+['body','a1','a2','u1','u2'].forEach(id=>$(id).addEventListener('input',rel));
+$('useg').onclick=()=>{const[GM,Rb]=BODY[$('body').value];$('g').value=(GM/Rb/Rb).toFixed(3);$('gp').value='c';document.querySelector('[data-tab=lab]').click();reset()};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab));draw();plot()});
+['h','v0','g','m','drag','cd','area','rho'].forEach(id=>$(id).addEventListener('change',reset));$('g').addEventListener('input',()=>$('gp').value='c');
+$('gp').addEventListener('change',()=>{if($('gp').value!=='c'){$('g').value=$('gp').value;reset()}});$('pm').addEventListener('change',plot);
+const redraw=()=>{draw();plot()};addEventListener('resize',redraw);matchMedia('(prefers-color-scheme:dark)').addEventListener('change',redraw);rows();reset();
+})();
+</script></body></html>
